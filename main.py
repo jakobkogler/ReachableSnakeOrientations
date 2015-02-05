@@ -19,11 +19,7 @@ def rotation(fixed, points, dir=0):
     rect_x = [q1[0], q2[0]]
     rect_y = [q1[1], q2[1]]
 
-
-    if not any(min(rect_x)<=p[0]<=max(rect_x) and min(rect_y)<=p[1]<=max(rect_y) and (fixed[-1][0]-p[0])**2 + (fixed[-1][1]-p[1])**2 <= len(points)**2 for p in fixed[:-1]):
-        return fixed, points
-    else:
-        return None
+    return not any(min(rect_x)<=p[0]<=max(rect_x) and min(rect_y)<=p[1]<=max(rect_y) and (fixed[-1][0]-p[0])**2 + (fixed[-1][1]-p[1])**2 <= len(points)**2 for p in fixed[:-1]), fixed, points
 
 
 def compute_reachable_snake_orientations(n):
@@ -44,17 +40,14 @@ def recursive_search(fixed, points, rotations, rotation_done = 0):
         return orientations
 
     # try rotation left
-    rot_left = rotation(fixed, points, 0)
-    if rot_left:
-
-        fixed_left, points_left = rot_left
+    success, fixed_left, points_left = rotation(fixed, points, 0)
+    if success:
         orientations += recursive_search(fixed_left, points_left, rotations + [0], 1)
 
     # try rotation right
     if rotation_done:
-        rot_right = rotation(fixed, points, 1)
-        if rot_right:
-            fixed_right, points_right = rot_right
+        success, fixed_right, points_right = rotation(fixed, points, 1)
+        if success:
             orientations += recursive_search(fixed_right, points_right, rotations + [2], rotation_done)
 
     # straight
