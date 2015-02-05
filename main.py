@@ -1,7 +1,9 @@
-import visualize
+import time
 
 def rotation(fixed, points, dir=0):
-    p = points.pop(0)
+    p = points[0]
+    points = points[1:]
+    fixed = fixed[:]
     fixed.append(p)
 
     q1 = points[-1]
@@ -24,17 +26,46 @@ def rotation(fixed, points, dir=0):
     else:
         return None
 
-points = [(1,0), (2,0), (3,0), (4,0), (5,0)]
 
-fixed = [(0,0)]
-for i in range(4):
-    ret = rotation(fixed, points)
-    if ret:
-        fixed, points = ret
-        print(fixed + points)
-        visualize.visual(fixed+points, "{}.png".format(i))
-    else:
-        break
+def compute_reachable_snake_orientations(n):
+    ret = recursive_search([(0,0)], [(0,i+1) for i in range(n)], [])
+    #print ret
+    return len(ret)
 
 
+def recursive_search(fixed, points, rotations):
+    orientations = set()
 
+    if len(points) <= 1:
+        rot = tuple(rotations)
+        rot = min(rot, rot[::-1], tuple(2-r for r in rot), tuple(2-r for r in rot)[::-1])
+        orientations.add(rot)
+        return orientations
+
+    # try rotation left
+    rot_left = rotation(fixed, points, 0)
+    if rot_left:
+
+        fixed_left, points_left = rot_left
+        orientations |= recursive_search(fixed_left, points_left, rotations + [0])
+
+    # try rotation right
+    if any(r!=1 for r in rotations):
+        rot_right = rotation(fixed, points, 1)
+        if rot_right:
+            fixed_right, points_right = rot_right
+            orientations |= recursive_search(fixed_right, points_right, rotations + [2])
+
+    # straight
+    fixed.append(points.pop(0))
+    orientations |= recursive_search(fixed, points, rotations + [1])
+
+    return orientations
+
+
+for n in range(20):
+    start_time = time.time()
+    result = compute_reachable_snake_orientations(n)
+    end_time = time.time()
+    print "Result for", n, "is", result
+    print "duration =", end_time - start_time
