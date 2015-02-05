@@ -9,12 +9,11 @@ def rotation(fixed, points, dir=0):
     q1 = points[-1]
     #remember last point
 
-    #translate
-    points = [(x-p[0],y-p[1]) for (x,y) in points]
-    #rotate
-    points = [(-y, x) for (x,y) in points] if dir==0 else [(y, -x) for (x,y) in points]
-    # translate_back
-    points = [(x+p[0],y+p[1]) for (x,y) in points]
+    #translate, rotate, translate
+    if dir==0:
+        points = [(p[1]-y+p[0],x-p[0]+p[1]) for (x,y) in points]
+    else:
+        points = [(y-p[1]+p[0],p[0]-x+p[1]) for (x,y) in points]
 
     q2 = points[-1]
     rect_x = [q1[0], q2[0]]
@@ -33,7 +32,7 @@ def compute_reachable_snake_orientations(n):
     return len(set(ret))
 
 
-def recursive_search(fixed, points, rotations):
+def recursive_search(fixed, points, rotations, rotation_done = 0):
     orientations = []
 
     if len(points) <= 1:
@@ -49,18 +48,18 @@ def recursive_search(fixed, points, rotations):
     if rot_left:
 
         fixed_left, points_left = rot_left
-        orientations += recursive_search(fixed_left, points_left, rotations + [0])
+        orientations += recursive_search(fixed_left, points_left, rotations + [0], 1)
 
     # try rotation right
-    if any(r!=1 for r in rotations):
+    if rotation_done:
         rot_right = rotation(fixed, points, 1)
         if rot_right:
             fixed_right, points_right = rot_right
-            orientations += recursive_search(fixed_right, points_right, rotations + [2])
+            orientations += recursive_search(fixed_right, points_right, rotations + [2], rotation_done)
 
     # straight
     fixed.append(points.pop(0))
-    orientations += recursive_search(fixed, points, rotations + [1])
+    orientations += recursive_search(fixed, points, rotations + [1], rotation_done)
 
     return orientations
 
