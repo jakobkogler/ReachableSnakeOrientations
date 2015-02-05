@@ -1,0 +1,36 @@
+Result for 0 is 1
+duration = 0.0
+Result for 1 is 1
+duration = 0.0
+Result for 2 is 2
+duration = 0.0
+Result for 3 is 4
+duration = 0.0
+Result for 4 is 9
+duration = 0.0
+Result for 5 is 22
+duration = 0.000999927520752
+Result for 6 is 56
+duration = 0.00100016593933
+Result for 7 is 147
+duration = 0.00300002098083
+Result for 8 is 387
+duration = 0.00899982452393
+Result for 9 is 1040
+duration = 0.0230000019073
+Result for 10 is 2769
+duration = 0.0650000572205
+Result for 11 is 7443
+duration = 0.180000066757
+Result for 12 is 19796
+duration = 0.517999887466
+Result for 13 is 52989
+duration = 1.43200016022
+Result for 14 is 140351
+duration = 3.90999984741
+Result for 15 is 373461
+duration = 10.7840001583
+Result for 16 is 984540
+duration = 30.0379998684
+Result for 17 is 2604571
+duration = 87.5600001812
