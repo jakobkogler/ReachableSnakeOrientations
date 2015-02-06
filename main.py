@@ -3,10 +3,24 @@ import sys
 
 
 class SnakeOrientations:
+    def rotation_allowed(self, fixed_points, points, rotation_direction):
+        p = fixed_points[-1]
+        q = points[-1]
+
+        if rotation_direction == 0:
+            rect_x = [q[0], p[1]-q[1]+p[0]]
+            rect_y = [q[1], q[0]-p[0]+p[1]]
+        else:
+            rect_x = [q[0], q[1]-p[1]+p[0]]
+            rect_y = [q[1], p[0]-q[0]+p[1]]
+
+        return not any(min(rect_x) <= q[0] <= max(rect_x) and min(rect_y) <= q[1] <= max(rect_y)
+                  and (p[0] - q[0])**2 + (p[1] - q[1])**2 <= len(points)**2 for q in fixed_points[:-1])
+
+
     def rotation(self, fixed_points, points, dir=0):
         points = points[:]
         p = fixed_points[-1]
-        rect_point_1 = points[-1] # remember last point
 
         # translate, rotate, translate
         if dir==0:
@@ -14,13 +28,7 @@ class SnakeOrientations:
         else:
             points = [(y-p[1]+p[0],p[0]-x+p[1]) for (x,y) in points]
 
-        rect_point_2 = points[-1]
-        rect_x = [rect_point_1[0], rect_point_2[0]]
-        rect_y = [rect_point_1[1], rect_point_2[1]]
-
-        allowed = not any(min(rect_x) <= q[0] <= max(rect_x) and min(rect_y) <= q[1] <= max(rect_y)
-                  and (p[0] - q[0])**2 + (p[1] - q[1])**2 <= len(points)**2 for q in fixed_points[:-1])
-        return allowed, points
+        return points
 
     def compute_reachable_snake_orientations(self, n):
         self.orientations = set()
@@ -40,15 +48,12 @@ class SnakeOrientations:
         fixed = fixed + [points.pop(0)]
 
         # rotation left
-        allowed, points_left = self.rotation(fixed, points, 0)
-        if allowed:
-            self.recursive_search(fixed, points_left, rotations + [0], 1)
+        if self.rotation_allowed(fixed, points, 0):
+            self.recursive_search(fixed, self.rotation(fixed, points, 0), rotations + [0], 1)
 
         # rotation right
-        if rotation_done:
-            allowed, points_right = self.rotation(fixed, points, 1)
-            if allowed:
-                self.recursive_search(fixed, points_right, rotations + [2], rotation_done)
+        if rotation_done and self.rotation_allowed(fixed, points, 1):
+            self.recursive_search(fixed, self.rotation(fixed, points, 1), rotations + [2], rotation_done)
 
         # no rotatio
         self.recursive_search(fixed, points, rotations + [1], rotation_done)
