@@ -54,7 +54,7 @@ class SnakeOrientations:
         self.recursive_search([(0, 0)], [(0, i+1) for i in range(n)], [])
         return len(self.orientations)
 
-    def recursive_search(self, fixed, points, rotations, rotation_done=0):
+    def recursive_search(self, fixed, points, rotations, rotation_done=False):
         """Recursively searches for all reachable snake orientations.
         """
 
@@ -71,11 +71,11 @@ class SnakeOrientations:
 
             # rotation left
             if self.rotation_allowed(fixed, points, 0):
-                self.recursive_search(fixed, self.rotate(fixed, points, 0), rotations + [0], 1)
+                self.recursive_search(fixed, self.rotate(fixed, points, 0), rotations + [0], True)
 
             # rotation right
             if rotation_done and self.rotation_allowed(fixed, points, 1):
-                self.recursive_search(fixed, self.rotate(fixed, points, 1), rotations + [2], rotation_done)
+                self.recursive_search(fixed, self.rotate(fixed, points, 1), rotations + [2], True)
 
             # no rotation
             self.recursive_search(fixed, points, rotations + [1], rotation_done)
