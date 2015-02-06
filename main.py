@@ -17,18 +17,14 @@ class SnakeOrientations:
         return not any(min(rect_x) <= q[0] <= max(rect_x) and min(rect_y) <= q[1] <= max(rect_y)
                   and (p[0] - q[0])**2 + (p[1] - q[1])**2 <= len(points)**2 for q in fixed_points[:-1])
 
-
-    def rotation(self, fixed_points, points, dir=0):
-        points = points[:]
+    def rotate(self, fixed_points, points, rotation_direction = 0):
         p = fixed_points[-1]
 
         # translate, rotate, translate
-        if dir==0:
-            points = [(p[1]-y+p[0],x-p[0]+p[1]) for (x,y) in points]
+        if rotation_direction == 0:
+            return [(p[1] - y + p[0], x - p[0] + p[1]) for (x, y) in points]
         else:
-            points = [(y-p[1]+p[0],p[0]-x+p[1]) for (x,y) in points]
-
-        return points
+            return [(y - p[1] + p[0], p[0] - x + p[1]) for (x, y) in points]
 
     def compute_reachable_snake_orientations(self, n):
         self.orientations = set()
@@ -49,11 +45,11 @@ class SnakeOrientations:
 
         # rotation left
         if self.rotation_allowed(fixed, points, 0):
-            self.recursive_search(fixed, self.rotation(fixed, points, 0), rotations + [0], 1)
+            self.recursive_search(fixed, self.rotate(fixed, points, 0), rotations + [0], 1)
 
         # rotation right
         if rotation_done and self.rotation_allowed(fixed, points, 1):
-            self.recursive_search(fixed, self.rotation(fixed, points, 1), rotations + [2], rotation_done)
+            self.recursive_search(fixed, self.rotate(fixed, points, 1), rotations + [2], rotation_done)
 
         # no rotatio
         self.recursive_search(fixed, points, rotations + [1], rotation_done)
