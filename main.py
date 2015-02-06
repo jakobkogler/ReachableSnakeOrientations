@@ -3,21 +3,40 @@ import sys
 
 
 class SnakeOrientations:
+    def points_in_quadrant(self, rectangle, center, radius, points):
+        """Determines, if any points is inside a quadrant.
+        The quadrant is defined as intersection of a rectangle and a circle
+        """
+
+        x1, x2, y1, y2 = rectangle
+
+        return any(x1 <= x <= x2 and y1 <= y <= y2
+                   and (center[0] - x)**2 + (center[1] - y)**2 <= radius**2
+                   for (x, y) in points)
+
     def rotation_allowed(self, fixed_points, points, rotation_direction):
+        """Determines, if the rotation of points is allowed or not.
+        The rotation point is the last point in fixed_points.
+        """
+
         p = fixed_points[-1]
         q = points[-1]
 
         if rotation_direction == 0:
-            rect_x = [q[0], p[1]-q[1]+p[0]]
-            rect_y = [q[1], q[0]-p[0]+p[1]]
+            rectangle_x = [q[0], p[1] - q[1] + p[0]]
+            rectangle_y = [q[1], q[0] - p[0] + p[1]]
         else:
-            rect_x = [q[0], q[1]-p[1]+p[0]]
-            rect_y = [q[1], p[0]-q[0]+p[1]]
+            rectangle_x = [q[0], q[1]-p[1]+p[0]]
+            rectangle_y = [q[1], p[0]-q[0]+p[1]]
 
-        return not any(min(rect_x) <= q[0] <= max(rect_x) and min(rect_y) <= q[1] <= max(rect_y)
-                  and (p[0] - q[0])**2 + (p[1] - q[1])**2 <= len(points)**2 for q in fixed_points[:-1])
+        rectangle = (min(rectangle_x), max(rectangle_x), min(rectangle_y), max(rectangle_y))
+        return not self.points_in_quadrant(rectangle, p, len(points), fixed_points[:-1])
 
-    def rotate(self, fixed_points, points, rotation_direction = 0):
+    def rotate(self, fixed_points, points, rotation_direction=0):
+        """Computes and returns rotated points.
+        The rotation point is the last point in fixed_points.
+        """
+
         p = fixed_points[-1]
 
         # translate, rotate, translate
@@ -27,11 +46,18 @@ class SnakeOrientations:
             return [(y - p[1] + p[0], p[0] - x + p[1]) for (x, y) in points]
 
     def compute_reachable_snake_orientations(self, n):
+        """Computes the number of reachable snake orientations of length n
+        up to rotation, translation and mirror symmetry.
+        """
+
         self.orientations = set()
         self.recursive_search([(0, 0)], [(0, i+1) for i in range(n)], [])
         return len(self.orientations)
 
-    def recursive_search(self, fixed, points, rotations, rotation_done = 0):
+    def recursive_search(self, fixed, points, rotations, rotation_done=0):
+        """Recursively searches for all reachable snake orientations.
+        """
+
         if len(points) <= 1:
             rot = rotations
             rot = min(rot, rot[::-1], [2-r for r in rot], [2-r for r in rot][::-1])
@@ -39,20 +65,20 @@ class SnakeOrientations:
             for r in rot:
                 value = 3*value + r
             self.orientations.add(value)
-            return
 
-        fixed = fixed + [points.pop(0)]
+        else:
+            fixed = fixed + [points.pop(0)]
 
-        # rotation left
-        if self.rotation_allowed(fixed, points, 0):
-            self.recursive_search(fixed, self.rotate(fixed, points, 0), rotations + [0], 1)
+            # rotation left
+            if self.rotation_allowed(fixed, points, 0):
+                self.recursive_search(fixed, self.rotate(fixed, points, 0), rotations + [0], 1)
 
-        # rotation right
-        if rotation_done and self.rotation_allowed(fixed, points, 1):
-            self.recursive_search(fixed, self.rotate(fixed, points, 1), rotations + [2], rotation_done)
+            # rotation right
+            if rotation_done and self.rotation_allowed(fixed, points, 1):
+                self.recursive_search(fixed, self.rotate(fixed, points, 1), rotations + [2], rotation_done)
 
-        # no rotatio
-        self.recursive_search(fixed, points, rotations + [1], rotation_done)
+            # no rotation
+            self.recursive_search(fixed, points, rotations + [1], rotation_done)
 
 
 if __name__ == "__main__":
