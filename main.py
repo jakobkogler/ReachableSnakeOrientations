@@ -22,12 +22,10 @@ class SnakeOrientations:
                   and (p[0] - q[0])**2 + (p[1] - q[1])**2 <= len(points)**2 for q in fixed_points[:-1])
         return allowed, points
 
-
     def compute_reachable_snake_orientations(self, n):
         self.orientations = set()
         self.recursive_search([(0, 0)], [(0, i+1) for i in range(n)], [])
         return len(self.orientations)
-
 
     def recursive_search(self, fixed, points, rotations, rotation_done = 0):
         if len(points) <= 1:

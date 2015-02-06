@@ -1,40 +1,20 @@
-Result for 0 is 1
-duration = 0.0
-Result for 1 is 1
-duration = 0.0
-Result for 2 is 2
-duration = 0.0
-Result for 3 is 4
-duration = 0.0
-Result for 4 is 9
-duration = 0.0
-Result for 5 is 22
-duration = 0.000999927520752
-Result for 6 is 56
-duration = 0.000999927520752
-Result for 7 is 147
-duration = 0.00300002098083
-Result for 8 is 387
-duration = 0.00999999046326
-Result for 9 is 1040
-duration = 0.0400002002716
-Result for 10 is 2769
-duration = 0.0719997882843
-Result for 11 is 7443
-duration = 0.212000131607
-Result for 12 is 19796
-duration = 0.611000061035
-Result for 13 is 52989
-duration = 1.4509999752
-Result for 14 is 140351
-duration = 3.94600009918
-Result for 15 is 373461
-duration = 10.6679999828
-Result for 16 is 984540
-duration = 28.6849999428
-Result for 17 is 2604571
-duration = 76.9630000591
-Result for 18 is 6835784
-duration = 206.901000023
-Result for 19 is 17988297
-duration = 559.174999952
+ 0:        1 (  0.00 seconds)
+ 1:        1 (  0.00 seconds)
+ 2:        2 (  0.00 seconds)
+ 3:        4 (  0.00 seconds)
+ 4:        9 (  0.00 seconds)
+ 5:       22 (  0.00 seconds)
+ 6:       56 (  0.00 seconds)
+ 7:      147 (  0.03 seconds)
+ 8:      387 (  0.03 seconds)
+ 9:     1040 (  0.09 seconds)
+10:     2769 (  0.13 seconds)
+11:     7443 (  0.06 seconds)
+12:    19796 (  0.14 seconds)
+13:    52989 (  0.33 seconds)
+14:   140351 (  0.74 seconds)
+15:   373461 (  2.08 seconds)
+16:   984540 (  5.54 seconds)
+17:  2604571 ( 15.09 seconds)
+18:  6835784 ( 41.23 seconds)
+19: 17988297 (112.52 seconds)
