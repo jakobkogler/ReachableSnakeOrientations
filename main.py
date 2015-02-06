@@ -31,8 +31,8 @@ class SnakeOrientations:
 
     def recursive_search(self, fixed, points, rotations, rotation_done = 0):
         if len(points) <= 1:
-            rot = tuple(rotations)
-            rot = min(rot, rot[::-1], tuple(2-r for r in rot), tuple(2-r for r in rot)[::-1])
+            rot = rotations
+            rot = min(rot, rot[::-1], [2-r for r in rot], [2-r for r in rot][::-1])
             value = 0
             for r in rot:
                 value = 3*value + r
